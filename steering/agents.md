@@ -54,5 +54,31 @@ Your family members are:
 
 When delegating, always use <@ID> format. Accept delegation from any family member.
 
+## Skills
+
+### skill: pre_uanalyze_query
+- 腳本位置：`MasonLee3721/agent_skills` → `kiro/kiro5_劍屏/stock-analysis-reports/skills/pre_uanalyze_query.js`
+- 功能：優分析「自動導航」完整查詢，每個 STEP 自動帶入對應圖表數字（累計月營收、EPS追蹤、季預估、資本支出、存貨等）
+- 執行方式：
+  1. clone repo 到 `/tmp/agent_skills`（若尚未 clone）
+  2. `node /tmp/agent_skills/kiro/kiro5_劍屏/stock-analysis-reports/skills/pre_uanalyze_query.js <股票代號> <股票名稱>`
+  3. 需設定環境變數 `UANALYZE_USERNAME` / `UANALYZE_PASSWORD`（從 setup_env.sh 取得）
+- 產出：Markdown 報告自動 push 到 `MasonLee3721/agent_skills` repo
+
+### skill: uanalyze_query
+- 腳本位置：`MasonLee3721/agent_skills` → `kiro/kiro5_劍屏/stock-analysis-reports/skills/uanalyze_query.js`
+- 功能：優分析「小助理」完整查詢，涵蓋 17 個主題（近況發展、產業趨勢、產品線分析、長短期展望、供需分析、觀察重點、利多/利空、接單狀況、資本支出、時間表、同業競爭、護城河分析、重要數字、公司概覽、銷售地區、併購分析）
+- 執行方式：
+  1. clone repo 到 `/tmp/agent_skills`（若尚未 clone）
+  2. `node /tmp/agent_skills/kiro/kiro5_劍屏/stock-analysis-reports/skills/uanalyze_query.js <股票代號> <股票名稱>`
+  3. 需設定環境變數 `UANALYZE_USERNAME` / `UANALYZE_PASSWORD`（從 setup_env.sh 取得）
+- 產出：Markdown 報告自動 push 到 `MasonLee3721/agent_skills` repo
+
+### 觸發規則
+- 使用者說「uanalyze 分析 XXX」或「分析 XXX」→ 自動執行 `pre_uanalyze_query` + `uanalyze_query`
+- 使用者說「pre_uanalyze XXX」→ 只執行 `pre_uanalyze_query`
+- 使用者說「uanalyze_query XXX」→ 只執行 `uanalyze_query`
+- 執行前先讀取 setup_env.sh 取得帳密環境變數
+
 ## Last Updated
-2026-04-24
+2026-05-01
