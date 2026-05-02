@@ -81,15 +81,17 @@ When delegating, always use <@ID> format. Accept delegation from any family memb
 - 執行前先讀取 setup_env.sh 取得帳密環境變數
 
 ### skill: goodinfo_trust_ratio
-- 腳本位置：`MasonLee3721/goodinfo-scraper` → `scrape_goodinfo.py`
-- 功能：爬取 Goodinfo 投信買超佔發行張數當日排行（前 300 名），存成每日 CSV 並 push 到 GitHub
+- 腳本位置：`MasonLee3721/goodinfo-scraper`
+- 功能：爬取投信買超佔發行張數排行 + 外資投信同買，存成每日 CSV 並 push 到 GitHub，最後顯示投信認養名單
 - 執行方式：
   1. 確認 repo 存在：`uv run python3 /home/agent/goodinfo-scraper/setup.py`
-  2. 執行爬蟲：`uv run --with requests --with beautifulsoup4 --with lxml python3 /home/agent/goodinfo-scraper/scrape_goodinfo.py`
-- 產出：CSV 自動存到 `MasonLee3721/goodinfo-scraper` repo 的 `data/YYYY-MM-DD.csv`
+  2. 爬投信：`uv run --with requests --with beautifulsoup4 --with lxml python3 /home/agent/goodinfo-scraper/scrape_goodinfo.py`
+  3. 爬外資投信同買：`uv run --with requests --with beautifulsoup4 --with lxml python3 /home/agent/goodinfo-scraper/scrape_foreign.py`
+  4. 顯示認養名單：`uv run --with pandas python3 /home/agent/goodinfo-scraper/screen.py`
+- 產出：`data/YYYY-MM-DD.csv`（投信）、`data_foreign/YYYY-MM-DD.csv`（外資同買）
 
 ### 觸發規則（新增）
-- 使用者說「每日投信投本比」或「跑投本比」→ 自動執行 `goodinfo_trust_ratio` skill，執行完後接著跑 `screen.py` 顯示投信認養名單
+- 使用者說「每日投信投本比」或「跑投本比」→ 依序執行上述 4 個步驟
 
 ## Last Updated
 2026-05-02
