@@ -89,7 +89,7 @@ When delegating, always use <@ID> format. Accept delegation from any family memb
 - 產出：CSV 自動存到 `MasonLee3721/goodinfo-scraper` repo 的 `data/YYYY-MM-DD.csv`
 
 ### 觸發規則（新增）
-- 使用者說「每日投信投本比」或「跑投本比」→ 自動執行 `goodinfo_trust_ratio` skill
+- 使用者說「每日投信投本比」或「跑投本比」→ 自動執行 `goodinfo_trust_ratio` skill，執行完後接著跑 `screen.py` 顯示投信認養名單
 
 ## Last Updated
 2026-05-02
