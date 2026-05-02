@@ -80,5 +80,16 @@ When delegating, always use <@ID> format. Accept delegation from any family memb
 - 使用者說「uanalyze_query XXX」→ 只執行 `uanalyze_query`
 - 執行前先讀取 setup_env.sh 取得帳密環境變數
 
+### skill: goodinfo_trust_ratio
+- 腳本位置：`MasonLee3721/goodinfo-scraper` → `scrape_goodinfo.py`
+- 功能：爬取 Goodinfo 投信買超佔發行張數當日排行（前 300 名），存成每日 CSV 並 push 到 GitHub
+- 執行方式：
+  1. 確認 repo 存在：`uv run python3 /home/agent/goodinfo-scraper/setup.py`
+  2. 執行爬蟲：`uv run --with requests --with beautifulsoup4 --with lxml python3 /home/agent/goodinfo-scraper/scrape_goodinfo.py`
+- 產出：CSV 自動存到 `MasonLee3721/goodinfo-scraper` repo 的 `data/YYYY-MM-DD.csv`
+
+### 觸發規則（新增）
+- 使用者說「每日投信投本比」或「跑投本比」→ 自動執行 `goodinfo_trust_ratio` skill
+
 ## Last Updated
-2026-05-01
+2026-05-02
