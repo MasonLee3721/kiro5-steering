@@ -93,7 +93,7 @@ When delegating, always use <@ID> format. Accept delegation from any family memb
 - 產出：`data/YYYY-MM-DD.csv`（投信）、`data_foreign/YYYY-MM-DD.csv`（外資同買）
 
 ### 觸發規則（新增）
-- 使用者說「每日投信投本比」或「跑投本比」→ 依序執行上述 4 個步驟
+- 使用者說「每日投信投本比」或「跑投本比」→ 依序執行上述 6 個步驟，最後在 Discord 回覆今日推薦清單
 
 ## Last Updated
 2026-05-02
