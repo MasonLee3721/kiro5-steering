@@ -89,6 +89,7 @@ When delegating, always use <@ID> format. Accept delegation from any family memb
   3. 爬外資投信同買：`uv run --with requests --with beautifulsoup4 --with lxml python3 /home/agent/goodinfo-scraper/scrape_foreign.py`
   4. 顯示認養名單：`uv run --with pandas python3 /home/agent/goodinfo-scraper/screen.py`
   5. 技術面篩選：`uv run --with pandas --with requests python3 /home/agent/goodinfo-scraper/tech_screen.py`
+  6. 輸出今日推薦清單：`uv run --with pandas --with requests python3 /home/agent/goodinfo-scraper/recommend.py`
 - 產出：`data/YYYY-MM-DD.csv`（投信）、`data_foreign/YYYY-MM-DD.csv`（外資同買）
 
 ### 觸發規則（新增）
