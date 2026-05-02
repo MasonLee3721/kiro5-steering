@@ -89,8 +89,9 @@ When delegating, always use <@ID> format. Accept delegation from any family memb
   3. 爬外資投信同買：`uv run --with requests --with beautifulsoup4 --with lxml python3 /home/agent/goodinfo-scraper/scrape_foreign.py`
   4. 顯示認養名單：`uv run --with pandas python3 /home/agent/goodinfo-scraper/screen.py`
   5. 技術面篩選：`uv run --with pandas --with requests python3 /home/agent/goodinfo-scraper/tech_screen.py`
-  6. 輸出今日推薦清單 + 自動畫 K 線圖 + 傳圖到 Discord：`uv run --with pandas --with requests --with mplfinance --with matplotlib python3 /home/agent/goodinfo-scraper/recommend.py`
+  6. 輸出今日推薦清單 + 自動畫 K 線圖 + 傳圖到 Discord：`uv run --with pandas --with requests --with mplfinance --with matplotlib --with yfinance python3 /home/agent/goodinfo-scraper/recommend.py`
 - 產出：`data/YYYY-MM-DD.csv`（投信）、`data_foreign/YYYY-MM-DD.csv`（外資同買）、`charts/{代號}.png`（K 線圖）
+- 注意：K 線圖資料來源為 yfinance（上市用 .TW，上櫃用 .TWO），上市/上櫃皆可畫圖
 
 ### 觸發規則（新增）
 - 使用者說「每日投信投本比」或「跑投本比」→ 依序執行上述 6 個步驟，最後在 Discord 回覆今日推薦清單並傳送 K 線圖
