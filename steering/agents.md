@@ -98,11 +98,11 @@ When delegating, always use <@ID> format. Accept delegation from any family memb
 
 ### skill: trust_trend
 - 腳本位置：`MasonLee3721/goodinfo-scraper` → `trust_trend.py`
-- 功能：找出今日連買中的股票，並判斷買超幅度趨勢（📈遞增 / 📉遞減 / ➡️持平），顯示近期走勢數值
+- 功能：找出今日連買中的股票，篩選條件：📈遞增 + 連買≥2天 + 買超≥0.2%，自動畫 K 線圖（最多5張）並傳到 Discord
 - 執行方式：
   1. 確認 repo 存在（`/home/agent/goodinfo-scraper/`）
-  2. `uv run --with pandas python3 /home/agent/goodinfo-scraper/trust_trend.py`
-- 產出：連買股票清單，篩選條件：📈遞增 + 連買≥2天 + 買超≥0.2%，含近期每日數值
+  2. `uv run --with pandas --with requests --with mplfinance --with matplotlib --with yfinance python3 /home/agent/goodinfo-scraper/trust_trend.py`
+- 產出：篩選後清單（含連買天數、趨勢、近期走勢數值）+ K 線圖傳送到 Discord（最多5張）
 - 注意：需先有 `data/` 資料夾內的 CSV（先跑 scrape_goodinfo.py）
 
 ### 觸發規則
