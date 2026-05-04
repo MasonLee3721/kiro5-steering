@@ -94,7 +94,7 @@ When delegating, always use <@ID> format. Accept delegation from any family memb
 - 注意：K 線圖資料來源為 yfinance（上市用 .TW，上櫃用 .TWO），上市/上櫃皆可畫圖
 
 ### 觸發規則（新增）
-- 使用者說「每日投信投本比」或「跑投本比」→ 依序執行上述 6 個步驟，最後在 Discord 回覆今日推薦清單並傳送 K 線圖
+- 使用者說「每日投信投本比」、「跑投本比」、「跑頭本比」、「跑投比」等類似詞 → 依序執行上述 6 個步驟，最後在 Discord 回覆今日推薦清單並傳送 K 線圖
 
 ## Last Updated
 2026-05-02
