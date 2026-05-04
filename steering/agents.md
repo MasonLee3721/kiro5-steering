@@ -96,5 +96,17 @@ When delegating, always use <@ID> format. Accept delegation from any family memb
 ### 觸發規則（新增）
 - 使用者說「每日投信投本比」、「跑投本比」、「跑頭本比」、「跑投比」等類似詞 → 依序執行上述 6 個步驟，最後在 Discord 回覆今日推薦清單並傳送 K 線圖
 
+### skill: trust_trend
+- 腳本位置：`MasonLee3721/goodinfo-scraper` → `trust_trend.py`
+- 功能：找出今日連買中的股票，並判斷買超幅度趨勢（📈遞增 / 📉遞減 / ➡️持平），顯示近期走勢數值
+- 執行方式：
+  1. 確認 repo 存在（`/home/agent/goodinfo-scraper/`）
+  2. `uv run --with pandas python3 /home/agent/goodinfo-scraper/trust_trend.py`
+- 產出：連買股票清單，含連買天數、趨勢方向、平均買超%、近期每日數值
+- 注意：需先有 `data/` 資料夾內的 CSV（先跑 scrape_goodinfo.py）
+
+### 觸發規則
+- 使用者說「投信連買趨勢」、「投信連買觀察」、「投信連買買」等 → 執行 trust_trend.py 並回覆結果
+
 ## Last Updated
-2026-05-02
+2026-05-04
