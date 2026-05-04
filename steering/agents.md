@@ -102,7 +102,7 @@ When delegating, always use <@ID> format. Accept delegation from any family memb
 - 執行方式：
   1. 確認 repo 存在（`/home/agent/goodinfo-scraper/`）
   2. `uv run --with pandas python3 /home/agent/goodinfo-scraper/trust_trend.py`
-- 產出：連買股票清單，含連買天數、趨勢方向、平均買超%、近期每日數值
+- 產出：連買股票清單，篩選條件：📈遞增 + 連買≥2天 + 買超≥0.2%，含近期每日數值
 - 注意：需先有 `data/` 資料夾內的 CSV（先跑 scrape_goodinfo.py）
 
 ### 觸發規則
