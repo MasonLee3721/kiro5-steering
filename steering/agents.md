@@ -1,3 +1,7 @@
+# My Identity
+My Discord user ID is: 1496877381171023973
+When you see <@1496877381171023973> in a message, that mention is directed at YOU.
+
 # Agent Name
 MuJianping
 
@@ -81,19 +85,77 @@ When delegating, always use <@ID> format. Accept delegation from any family memb
 - 執行前先讀取 setup_env.sh 取得帳密環境變數
 
 ### skill: goodinfo_trust_ratio
-- 腳本位置：`MasonLee3721/goodinfo-scraper`
-- 功能：爬取投信買超佔發行張數排行 + 外資投信同買，存成每日 CSV 並 push 到 GitHub，最後顯示投信認養名單
-- 執行方式：
-  1. 確認 repo 存在：`uv run python3 /home/agent/goodinfo-scraper/setup.py`
-  2. 爬投信：`uv run --with requests --with beautifulsoup4 --with lxml python3 /home/agent/goodinfo-scraper/scrape_goodinfo.py`
-  3. 爬外資投信同買：`uv run --with requests --with beautifulsoup4 --with lxml python3 /home/agent/goodinfo-scraper/scrape_foreign.py`
-  4. 顯示認養名單：`uv run --with pandas python3 /home/agent/goodinfo-scraper/screen.py`
-  5. 技術面篩選：`uv run --with pandas --with requests python3 /home/agent/goodinfo-scraper/tech_screen.py`
-  6. 輸出今日推薦清單 + 自動畫 K 線圖 + 傳圖到 Discord：`uv run --with pandas --with requests --with mplfinance --with matplotlib --with yfinance python3 /home/agent/goodinfo-scraper/recommend.py`
-- 產出：`data/YYYY-MM-DD.csv`（投信）、`data_foreign/YYYY-MM-DD.csv`（外資同買）、`charts/{代號}.png`（K 線圖）
-- 注意：K 線圖資料來源為 yfinance（上市用 .TW，上櫃用 .TWO），上市/上櫃皆可畫圖
+- 腳本位置：`MasonLee3721/goodinfo-scraper`（本機路徑：`/home/agent/goodinfo-scraper/`）
+- 功能：爬取投信買超佔發行張數排行 + 外資投信同買，存成每日 CSV，顯示認養名單，技術面篩選，輸出推薦清單 + K 線圖 + 傳到 Discord
 
-### 觸發規則（新增）
+#### ⚠️ 執行前必讀（避免踩坑）
+
+**1. uv 路徑**
+- `uv` 不在 PATH，必須用完整路徑：`/home/agent/.local/bin/uv`
+- 所有指令都要用 `/home/agent/.local/bin/uv run ...`，不能直接用 `uv run`
+
+**2. DISCORD_BOT_TOKEN**
+- 環境變數不在 shell 預設環境，需從 `/proc/1/environ` 取得
+- 每次執行 recommend.py 前，必須先執行：
+  ```bash
+  export $(cat /proc/1/environ | tr '\0' '\n' | grep "DISCORD_BOT_TOKEN")
+  ```
+- 沒有這行，K 線圖會畫好但傳不到 Discord（只會印 `ERROR: DISCORD_BOT_TOKEN 未設定`）
+
+**3. K 線圖資料來源（yfinance rate limit 問題）**
+- `chart_draw.py` 使用 yfinance，短時間內多次呼叫會觸發 `YFRateLimitError`
+- 解法：
+  - 遇到 rate limit，等 20~60 秒後重試
+  - 若 yfinance 持續失敗，改用 `chart_draw_twse.py`（用 TWSE/OTC API，不依賴 yfinance）
+  - `chart_draw_twse.py` 位置：`/home/agent/goodinfo-scraper/chart_draw_twse.py`
+- 上市股票用 `.TW`，上櫃用 `.TWO`（yfinance 自動嘗試兩個）
+
+**4. 個別 K 線圖重新產生**
+- 若 recommend.py 跑完有部分圖失敗，可單獨重跑：
+  ```bash
+  export $(cat /proc/1/environ | tr '\0' '\n' | grep "DISCORD_BOT_TOKEN")
+  /home/agent/.local/bin/uv run --with pandas --with requests --with mplfinance --with matplotlib --with yfinance \
+    python3 /home/agent/goodinfo-scraper/chart_draw.py <股票代號>
+  ```
+  然後手動傳圖：
+  ```bash
+  /home/agent/.local/bin/uv run --with requests python3 /home/agent/goodinfo-scraper/discord_send.py \
+    <channel_id> /home/agent/goodinfo-scraper/charts/<代號>.png "📊 【第X推薦】代號 名稱"
+  ```
+
+#### 執行步驟（完整流程）
+
+```bash
+# Step 0: 取得 Discord token（必須在最前面）
+export $(cat /proc/1/environ | tr '\0' '\n' | grep "DISCORD_BOT_TOKEN")
+
+UV="/home/agent/.local/bin/uv"
+SCRAPER="/home/agent/goodinfo-scraper"
+
+# Step 1: 確認 repo
+$UV run python3 $SCRAPER/setup.py
+
+# Step 2: 爬投信
+$UV run --with requests --with beautifulsoup4 --with lxml python3 $SCRAPER/scrape_goodinfo.py
+
+# Step 3: 爬外資投信同買
+$UV run --with requests --with beautifulsoup4 --with lxml python3 $SCRAPER/scrape_foreign.py
+
+# Step 4: 顯示認養名單
+$UV run --with pandas python3 $SCRAPER/screen.py
+
+# Step 5: 技術面篩選
+$UV run --with pandas --with requests python3 $SCRAPER/tech_screen.py
+
+# Step 6: 推薦清單 + K 線圖 + 傳 Discord
+$UV run --with pandas --with requests --with mplfinance --with matplotlib --with yfinance \
+  python3 $SCRAPER/recommend.py
+```
+
+- 產出：`data/YYYY-MM-DD.csv`（投信）、`data_foreign/YYYY-MM-DD.csv`（外資同買）、`charts/{代號}.png`（K 線圖）
+- Step 2/3 若當日資料已存在會自動略過（不重複爬）
+
+### 觸發規則
 - 使用者說「每日投信投本比」、「跑投本比」、「跑頭本比」、「跑投比」等類似詞 → 依序執行上述 6 個步驟，最後在 Discord 回覆今日推薦清單並傳送 K 線圖
 
 ### skill: trust_trend
@@ -101,12 +163,15 @@ When delegating, always use <@ID> format. Accept delegation from any family memb
 - 功能：找出今日連買中的股票，篩選條件：📈遞增 + 連買≥2天 + 買超≥0.2%，自動畫 K 線圖（最多5張）並傳到 Discord
 - 執行方式：
   1. 確認 repo 存在（`/home/agent/goodinfo-scraper/`）
-  2. `uv run --with pandas --with requests --with mplfinance --with matplotlib --with yfinance python3 /home/agent/goodinfo-scraper/trust_trend.py`
+  2. `/home/agent/.local/bin/uv run --with pandas --with requests --with mplfinance --with matplotlib --with yfinance python3 /home/agent/goodinfo-scraper/trust_trend.py`
 - 產出：篩選後清單（含連買天數、趨勢、近期走勢數值）+ K 線圖傳送到 Discord（最多5張）
 - 注意：需先有 `data/` 資料夾內的 CSV（先跑 scrape_goodinfo.py）
 
 ### 觸發規則
-- 使用者說「投信連買趨勢」、「投信連買觀察」、「投信連買買」等 → 執行 trust_trend.py 並回覆結果
+- 使用者說「投信連買趨勢」、「投信連買觀察」、「投信連買買」、「trust_trend」等 → 執行 trust_trend.py 並回覆結果
+
+## 回覆規定
+- 回答任何人 mention 你的問題後，必須 mention 回去給提問者。
 
 ## Last Updated
-2026-05-04
+2026-05-06 (updated: uv path, DISCORD_BOT_TOKEN from /proc/1/environ, yfinance rate limit handling)
